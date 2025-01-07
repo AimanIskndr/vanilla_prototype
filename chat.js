@@ -23,6 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
       recognition.onspeechend = () => {
         recognition.stop();
         outputBox.innerText = "Processing...";
+        startBtn.innerText = "Start Speaking";
+        isListening = false;
       };
   
       recognition.onresult = (event) => {
@@ -34,6 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
       recognition.onerror = (event) => {
         console.error("Speech recognition error:", event.error);
         outputBox.innerText = "Error occurred. Please try again.";
+        startBtn.innerText = "Start Speaking";
+        isListening = false;
       };
     } else {
       outputBox.innerText = "Sorry, your browser does not support speech recognition.";
@@ -100,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const botResponse = data.choices[0].message.content;
   
           // Display ChatGPT response
-          outputBox.innerText = `LingoPair.AI: ${botResponse}`;
+          outputBox.innerText = `LingoPair: ${botResponse}`;
   
           // Use TTS to speak the response
           const utterance = new SpeechSynthesisUtterance(botResponse);
