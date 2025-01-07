@@ -6,10 +6,13 @@ document.addEventListener('DOMContentLoaded', () => {
   
     if (!startBtn || !outputBox) return; // Only run on chat page
   
+    // Get selected language from localStorage
+    const selectedLanguage = localStorage.getItem('selectedLanguage') || 'en-US';
+  
     // Initialize Web Speech API
     if ('webkitSpeechRecognition' in window) {
       recognition = new webkitSpeechRecognition();
-      recognition.lang = 'en-US';
+      recognition.lang = selectedLanguage; // Set language based on selection
       recognition.continuous = false;
       recognition.interimResults = false;
   
@@ -97,11 +100,11 @@ document.addEventListener('DOMContentLoaded', () => {
           const botResponse = data.choices[0].message.content;
   
           // Display ChatGPT response
-          outputBox.innerText = `LingoPair: ${botResponse}`;
+          outputBox.innerText = `LingoPair.AI: ${botResponse}`;
   
           // Use TTS to speak the response
           const utterance = new SpeechSynthesisUtterance(botResponse);
-          utterance.lang = 'en-US';
+          utterance.lang = selectedLanguage; // Set language for TTS
           window.speechSynthesis.speak(utterance);
         } else {
           const errorText = await response.text();

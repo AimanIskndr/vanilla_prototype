@@ -94,6 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
       cards.forEach(c => c.classList.remove('selected'));
       card.classList.add('selected');
       selectedLanguage = card.dataset.lang;
+      localStorage.setItem('selectedLanguage', selectedLanguage); // Save to localStorage
       document.getElementById('startSpeakingBtn').classList.remove('hidden');
     });
   });
