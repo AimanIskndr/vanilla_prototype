@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LingoPair - Practice Languages with AI</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Header Section -->
+<header>
+  <nav>
+    <div class="logo">LingoPair</div>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+    </div>
+  </nav>
+</header>
+
+<!-- Main Content -->
+<main>
+  <!-- Home Section -->
+  <section id="home" class="hero">
+    <h1>Practice Languages with AI</h1>
+    <p>Have natural conversations in 10+ languages with your AI language partner</p>
+    <button class="cta-button" onclick="scrollToLanguages()">Start Speaking</button>
+  </section>
+
+  <!-- Language Select Section -->
+  <section id="language-select">
+    <h2 style="text-align: center; padding: 1rem 0;">Choose Your Language</h2>
+    <div class="carousel-container">
+      <button class="carousel-btn prev">&lt;</button>
+      <div class="carousel-track">
+        <div class="carousel-card" data-lang="en">
+          <img src="assets/flags/english.svg" alt="English">
+          <p>English<br><span>English</span></p>
+        </div>
+        <div class="carousel-card" data-lang="my">
+          <img src="assets/flags/malay.svg" alt="Malay">
+          <p>Malay<br><span>Bahasa Melayu</span></p>
+        </div>
+        <div class="carousel-card" data-lang="jp">
+          <img src="assets/flags/japanese.svg" alt="Japanese">
+          <p>Japanese<br><span>日本語</span></p>
+        </div>
+        <div class="carousel-card" data-lang="es">
+          <img src="assets/flags/spanish.svg" alt="Spanish">
+          <p>Spanish<br><span>Español</span></p>
+        </div>
+        <div class="carousel-card" data-lang="fr">
+          <img src="assets/flags/french.svg" alt="French">
+          <p>French<br><span>Français</span></p>
+        </div>
+        <div class="carousel-card" data-lang="de">
+          <img src="assets/flags/german.svg" alt="German">
+          <p>German<br><span>Deutsch</span></p>
+        </div>
+        <div class="carousel-card" data-lang="it">
+          <img src="assets/flags/italian.svg" alt="Italian">
+          <p>Italian<br><span>Italiano</span></p>
+        </div>
+        <div class="carousel-card" data-lang="cn">
+          <img src="assets/flags/chinese.svg" alt="Chinese">
+          <p>Chinese<br><span>中文</span></p>
+        </div>
+        <div class="carousel-card" data-lang="kr">
+          <img src="assets/flags/korean.svg" alt="Korean">
+          <p>Korean<br><span>한국어</span></p>
+        </div>
+        <div class="carousel-card" data-lang="id">
+          <img src="assets/flags/indonesian.svg" alt="Indonesian">
+          <p>Indonesian<br><span>Bahasa Indonesia</span></p>
+        </div>
+        <div class="carousel-card" data-lang="th">
+          <img src="assets/flags/thai.svg" alt="Thai">
+          <p>Thai<br><span>ภาษาไทย</span></p>
+        </div>
+        <div class="carousel-card" data-lang="vn">
+          <img src="assets/flags/vietnamese.svg" alt="Vietnamese">
+          <p>Vietnamese<br><span>Tiếng Việt</span></p>
+        </div>
+        <div class="carousel-card" data-lang="ar">
+          <img src="assets/flags/arabic.svg" alt="Arabic">
+          <p>Arabic<br><span>العربية</span></p>
+        </div>
+        <div class="carousel-card" data-lang="tr">
+          <img src="assets/flags/turkish.svg" alt="Turkish">
+          <p>Turkish<br><span>Türkçe</span></p>
+        </div>
+      </div>
+      <button class="carousel-btn next">&gt;</button>
+      <button id="startSpeakingBtn" class="cta-button hidden" style="display: block; margin: 2rem auto;" onclick="goToChat()">Let's Go</button>
+    </div>
+  </section>
+</main>
+
+<!-- Footer Section -->
+<footer>
+  <div class="footer-content">
+    <div class="footer-section">
+      <h3>About LingoPair</h3>
+      <p>Practice languages with AI. Have natural conversations in multiple languages with your AI language partner.</p>
+    </div>
+    <div class="footer-section">
+      <h3>Features</h3>
+      <ul>
+        <li>AI Conversation Partner</li>
+        <li>Real-time Captions</li>
+        <li>Progress Tracking</li>
+      </ul>
+    </div>
+    <div class="footer-section">
+      <h3>Credits</h3>
+      <p>Developed by Aiman Iskandar</p>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
