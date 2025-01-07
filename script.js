@@ -116,4 +116,124 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('startRecording').classList.remove('hidden');
     }
   });
+
+  if (document.getElementById('chat-interface')) {
+    setupChat();
+  }
 });
+
+function setupChat() {
+  const messagesContainer = document.getElementById('messages');
+  const startBtn = document.getElementById('startRecording');
+  const stopBtn = document.getElementById('stopRecording');
+  let recognition;
+  let isRecording = false;
+
+  if ('webkitSpeechRecognition' in window) {
+    recognition = new webkitSpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    
+    recognition.onstart = () => {
+      addMessage('Listening...', 'loading');
+    };
+
+    recognition.onresult = (event) => {
+      const userSpeech = event.results[0][0].transcript;
+      addMessage(userSpeech, 'user-message');
+      fetchChatGPTResponse(userSpeech);
+    };
+
+    recognition.onerror = (event) => {
+      addMessage('Error occurred. Please try again.', 'loading');
+    };
+  }
+
+  startBtn.addEventListener('click', () => {
+    if (!isRecording) {
+      recognition.start();
+      isRecording = true;
+      startBtn.classList.add('hidden');
+      stopBtn.classList.remove('hidden');
+    }
+  });
+
+  stopBtn.addEventListener('click', () => {
+    if (isRecording) {
+      recognition.stop();
+      isRecording = false;
+      stopBtn.classList.add('hidden');
+      startBtn.classList.remove('hidden');
+    }
+  });
+
+  function addMessage(text, type) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${type}`;
+    messageDiv.textContent = text;
+    messagesContainer.appendChild(messageDiv);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  }
+
+  async function getApiKey() {
+    try {
+      const response = await fetch('api_key.txt');
+      if (!response.ok) throw new Error('Failed to load API key');
+      const apiKey = await response.text();
+      return apiKey.trim(); // Remove any whitespace
+    } catch (error) {
+      console.error('Error loading API key:', error);
+      throw error;
+    }
+  }
+
+  async function fetchChatGPTResponse(userInput) {
+    addMessage('Processing...', 'loading');
+    
+    try {
+      const apiKey = await getApiKey();
+      const endpoint = "https://api.openai.com/v1/chat/completions";
+      const requestBody = {
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            role: "system",
+            content: `You are a warm, friendly language learning partner...`
+          },
+          {
+            role: "user",
+            content: userInput
+          }
+        ]
+      };
+
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${apiKey}`
+        },
+        body: JSON.stringify(requestBody)
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const botResponse = data.choices[0].message.content;
+        
+        // Remove loading message
+        messagesContainer.removeChild(messagesContainer.lastChild);
+        
+        // Add bot response
+        addMessage(botResponse, 'bot-message');
+
+        // Speak response
+        const utterance = new SpeechSynthesisUtterance(botResponse);
+        utterance.lang = 'en-US';
+        window.speechSynthesis.speak(utterance);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      addMessage('Failed to get response. Check API key or connection.', 'loading');
+    }
+  }
+}
