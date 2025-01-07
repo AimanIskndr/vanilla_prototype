@@ -190,6 +190,10 @@
     border-radius: 15px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     padding: 1rem;
+    width: 100%;
+    max-width: 800px;
+    padding: 2rem;
+    text-align: center;
   }
 
   .chat-messages {
@@ -244,6 +248,16 @@
     padding: 1rem;
     display: flex;
     gap: 1rem;
+  }
+
+  .output-box {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    min-height: 100px;
+    text-align: left;
+    background: #f9f9f9;
   }
 
   footer {

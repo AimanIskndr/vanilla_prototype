@@ -17,16 +17,14 @@
 </header>
 
 <main>
-  <section id="chat-interface">
-    <div class="chat-container">
-      <div class="chat-messages" id="messages"></div>
-      <div class="chat-controls">
-        <button id="toggleCaption" class="control-btn">Toggle Captions</button>
-        <button id="startRecording" class="control-btn">Start Speaking</button>
-        <button id="stopRecording" class="control-btn hidden">Stop Speaking</button>
-      </div>
-    </div>
-  </section>
+  <div class="chat-container">
+    <h1>Practice Speaking</h1>
+    <button id="startBtn" class="control-btn">
+      <img src="assets/mic-icon.png" alt="Microphone Icon" style="width: 20px; height: 20px; vertical-align: middle;">
+      Start Speaking
+    </button>
+    <div class="output-box" id="outputBox">Press "Start Speaking" and say something...</div>
+  </div>
 </main>
 
 <footer>
