@@ -1,18 +1,42 @@
 document.addEventListener('DOMContentLoaded', () => {
   const startBtn = document.getElementById('startBtn');
+  const stopPracticeBtn = document.getElementById('stopPracticeBtn');
   const outputBox = document.getElementById('outputBox');
   let recognition;
   let isListening = false;
 
+  // Initialize conversationHistory; if there's a previous summary saved, use it.
+  let conversationHistory = [];
+  const prevSummary = localStorage.getItem('conversationSummary');
+  if (prevSummary) {
+    conversationHistory.push({
+      role: "system",
+      content: `The following is a summary of our previous conversation: ${prevSummary}`
+    });
+  } else {
+    conversationHistory.push({
+      role: "system",
+      content: `You are a warm, friendly, and encouraging language learning partner. Your goal is to help users practice their target language in a natural, conversational way. Follow these guidelines:
+      
+1. Start conversations naturally.
+2. Adapt to the user's level.
+3. Encourage practice and provide gentle corrections.
+4. Share cultural context occasionally.
+5. Keep the conversation friendly and engaging.
+      
+Example: "Hi! What did you do today?"`
+    });
+  }
+
   if (!startBtn || !outputBox) return; // Only run on chat page
 
-  // Get selected language from localStorage
+  // Get selected language from localStorage or default to English (US)
   const selectedLanguage = localStorage.getItem('selectedLanguage') || 'en-US';
 
-  // Initialize Web Speech API
+  // Initialize Web Speech API if supported.
   if ('webkitSpeechRecognition' in window) {
     recognition = new webkitSpeechRecognition();
-    recognition.lang = selectedLanguage; // Set language based on selection
+    recognition.lang = selectedLanguage;
     recognition.continuous = false;
     recognition.interimResults = false;
 
@@ -30,6 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
     recognition.onresult = (event) => {
       const userSpeech = event.results[0][0].transcript;
       outputBox.innerText = `You said: "${userSpeech}"`;
+      // Fetch ChatGPT response using the conversation history
       fetchChatGPTResponse(userSpeech);
     };
 
@@ -56,41 +81,28 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Function to fetch response from ChatGPT API
+  // Stop Practice button: When clicked, summarize the session.
+  stopPracticeBtn.addEventListener('click', async () => {
+    await summarizeSession();
+    alert('Practice session summarized. You can start a new session now.');
+    // Optionally, reload or redirect to index.html:
+    window.location.href = 'index.html';
+  });
+
+  // Function to fetch a response from ChatGPT API using conversationHistory
   async function fetchChatGPTResponse(userInput) {
-    const endpoint = "https://api.openai.com/v1/chat/completions";
+    // Add user input to conversation history
+    conversationHistory.push({ role: "user", content: userInput });
+    
     const requestBody = {
       model: "gpt-3.5-turbo",
-      messages: [
-        {
-          role: "system",
-          content: `You are a warm, friendly, and encouraging language learning partner. Your goal is to help users practice their target language in a natural, conversational way. Follow these guidelines:
-  
-  1. **Start Conversations Naturally**: Begin with simple, open-ended questions or topics related to everyday life (e.g., hobbies, travel, food, or daily routines) to encourage the user to speak.
-  2. **Adapt to the User's Level**: Adjust your language complexity based on the user's proficiency. Use simpler vocabulary and grammar for beginners, and more advanced structures for intermediate or advanced learners.
-  3. **Encourage Practice**: Motivate the user to speak more by praising their efforts and progress. For example, say, "That's great! You're doing really well!" or "I can see you're improving!"
-  4. **Gentle Corrections**: If the user makes a mistake, politely correct them by rephrasing their sentence correctly and explaining the error in a simple, non-intimidating way. For example, "You said, 'I go to park.' It's more natural to say, 'I go to the park.'"
-  5. **Cultural Context**: Occasionally share interesting cultural facts or phrases related to the target language to make the conversation more engaging. For example, "In France, people often say 'Bon appétit' before eating a meal."
-  6. **Keep It Conversational**: Avoid robotic or overly formal language. Speak as if you're having a friendly chat with the user.
-  7. **Avoid Emojis**: Since this conversation will be used with text-to-speech, do not use emojis or symbols.
-  
-  Example Conversations:
-  - For beginners: "Hi! What did you do today? Did you have a good day?"
-  - For intermediate learners: "What kind of music do you like? Do you have a favorite singer or band?"
-  - For advanced learners: "What do you think about the role of technology in education? Should schools use more technology?"
-  `
-        },
-        {
-          role: "user",
-          content: userInput
-        }
-      ],
-      max_tokens: 500
+      messages: conversationHistory,
+      max_tokens: 1000  // Reduced token count within the model's limits
     };
 
     try {
       const apiKey = await getApiKey();
-      const response = await fetch(endpoint, {
+      const response = await fetch("https://api.openai.com/v1/chat/completions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -98,17 +110,17 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         body: JSON.stringify(requestBody)
       });
-
+      
       if (response.ok) {
         const data = await response.json();
         const botResponse = data.choices[0].message.content;
-
-        // Display ChatGPT response
         outputBox.innerText = `LingoPair: ${botResponse}`;
-
-        // Use TTS to speak the response
+        // Add assistant response to conversation history
+        conversationHistory.push({ role: "assistant", content: botResponse });
+        
+        // Speak the response using Web Speech API
         const utterance = new SpeechSynthesisUtterance(botResponse);
-        utterance.lang = selectedLanguage; // Set language for TTS
+        utterance.lang = selectedLanguage;
         window.speechSynthesis.speak(utterance);
       } else {
         const errorText = await response.text();
@@ -121,12 +133,66 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Function to summarize the session
+  async function summarizeSession() {
+    const summaryPrompt = "Please provide a brief summary of our conversation so far.";
+    // Build a temporary messages array with the summary prompt appended.
+    const summaryMessages = [
+      {
+        role: "system",
+        content: "You are an assistant that summarizes conversations."
+      },
+      ...conversationHistory,
+      {
+        role: "user",
+        content: summaryPrompt
+      }
+    ];
+    
+    const requestBody = {
+      model: "gpt-3.5-turbo",
+      messages: summaryMessages,
+      max_tokens: 2000
+    };
+
+    try {
+      const apiKey = await getApiKey();
+      const response = await fetch("https://api.openai.com/v1/chat/completions", {
+         method: "POST",
+         headers: {
+           "Content-Type": "application/json",
+           "Authorization": `Bearer ${apiKey}`
+         },
+         body: JSON.stringify(requestBody)
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        const summary = data.choices[0].message.content;
+        // Save the summary in localStorage for next time
+        localStorage.setItem('conversationSummary', summary);
+        // Reset conversationHistory with the summary as the new context
+        conversationHistory = [
+          {
+            role: "system",
+            content: `The following is a summary of our previous conversation: ${summary}`
+          }
+        ];
+      } else {
+        console.error("Summary API error:", await response.text());
+      }
+    } catch (error) {
+      console.error("Error summarizing session:", error);
+    }
+  }
+
+  // Function to fetch the API key from a local file
   async function getApiKey() {
     try {
       const response = await fetch('api_key.txt');
       if (!response.ok) throw new Error('Failed to load API key');
       const apiKey = await response.text();
-      return apiKey.trim(); // Remove any whitespace
+      return apiKey.trim();
     } catch (error) {
       console.error('Error loading API key:', error);
       throw error;

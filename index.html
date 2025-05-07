@@ -11,9 +11,14 @@
 <!-- Header Section -->
 <header>
   <nav>
-    <div class="logo">LingoPair</div>
-    <div class="nav-links">
+    <div class="logo" style="float: left;">LingoPair</div>
+    <div class="nav-links" style="float: right;">
       <a href="index.html">Home</a>
+      <a href="login.html" id="login-btn">Login</a>
+    </div>
+    <div id="user-info" class="hidden" style="float: right;">
+      <a href="profile.html" id="username-display"></a>
+      <a href="#" id="logout-btn">Logout</a>
     </div>
   </nav>
 </header>
@@ -119,5 +124,6 @@
 </footer>
 
 <script src="script.js"></script>
+<script src="auth.js"></script>
 </body>
 </html>

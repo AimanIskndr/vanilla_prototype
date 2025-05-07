@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login/Signup - LingoPair</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo">LingoPair</div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="form-container">
+      <div id="loginSection">
+        <h1>Login</h1>
+        <form id="loginForm">
+          <input type="text" id="loginIdentifier" placeholder="Username or Email" required>
+          <input type="password" id="loginPassword" placeholder="Password" required>
+          <button type="submit">Login</button>
+        </form>
+        <p>Don't have an account? <a href="#" id="showSignup">Sign up</a></p>
+      </div>
+      <div id="signupSection" class="hidden">
+        <h1>Signup</h1>
+        <form id="signupForm">
+          <input type="text" id="signupName" placeholder="Name" required>
+          <input type="email" id="signupEmail" placeholder="Email" required>
+          <input type="password" id="signupPassword" placeholder="Password" required>
+          <input type="text" id="signupNativeLanguage" placeholder="Native Language" required>
+          <input type="text" id="signupTargetLanguage" placeholder="Target Language" required>
+          <button type="submit">Signup</button>
+        </form>
+        <p>Already have an account? <a href="#" id="showLogin">Login</a></p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>About LingoPair</h3>
+        <p>Practice languages with AI. Have natural conversations in multiple languages with your AI language partner.</p>
+      </div>
+      <div class="footer-section">
+        <h3>Features</h3>
+        <ul>
+          <li>AI Conversation Partner</li>
+          <li>Real-time Captions</li>
+          <li>Progress Tracking</li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Credits</h3>
+        <p>Developed by Aiman Iskandar</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="login.js"></script>
+</body>
+</html>

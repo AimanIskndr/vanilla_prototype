@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile - LingoPair</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo">LingoPair</div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <div id="auth-section">
+          <a href="login.html" id="login-btn">Login</a>
+          <div id="user-menu" class="hidden">
+            <span id="username-display"></span>
+            <div class="dropdown-content">
+              <a href="profile.html">Profile</a>
+              <a href="#" id="logout-btn">Logout</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="form-container">
+      <h1>Your Profile</h1>
+      <form id="profileForm">
+        <div class="form-group">
+          <label for="profile-username">Username</label>
+          <input type="text" id="profile-username" readonly>
+        </div>
+        <div class="form-group">
+          <label for="profile-name">Name</label>
+          <input type="text" id="profile-name">
+        </div>
+        <div class="form-group">
+          <label for="profile-email">Email</label>
+          <input type="email" id="profile-email">
+        </div>
+        <div class="form-group">
+          <label for="profile-native-language">Native Language</label>
+          <input type="text" id="profile-native-language">
+        </div>
+        <button type="submit">Save Changes</button>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>About LingoPair</h3>
+        <p>Practice languages with AI. Have natural conversations in multiple languages with your AI language partner.</p>
+      </div>
+      <div class="footer-section">
+        <h3>Features</h3>
+        <ul>
+          <li>AI Conversation Partner</li>
+          <li>Real-time Captions</li>
+          <li>Progress Tracking</li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Credits</h3>
+        <p>Developed by Aiman Iskandar</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="auth.js"></script>
+  <script src="profile.js"></script>
+</body>
+</html>
